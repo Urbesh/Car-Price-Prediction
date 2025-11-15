@@ -8,13 +8,12 @@ This is the first project that I made after learning basics of Machine Learning 
 **Predicting Car Prices with Machine Learning** 🤖
 
 📖 Description
-===============
+-------------
+The Car Prediction Project is a comprehensive data science initiative that leverages machine learning and data preprocessing techniques to predict car prices based on various factors such as make, model, year, mileage, and more. This project is designed to provide car enthusiasts, dealerships, and manufacturers with a robust tool to forecast car prices, identify trends, and make informed decisions.
 
-The Car Prediction Project is a machine learning-based project that aims to predict car prices based on various features such as make, model, year, mileage, and more. This project uses a combination of data preprocessing, feature engineering, and model selection to achieve high accuracy in predicting car prices. The project is built using Python and utilizes popular libraries such as pandas, numpy, and scikit-learn.
+The project consists of two primary components: a data preprocessing pipeline and a predictive model. The data preprocessing pipeline is responsible for loading, cleaning, and transforming the data, while the predictive model uses the preprocessed data to forecast car prices. The project utilizes a range of techniques, including data imputation, feature scaling, and encoding, to ensure that the data is properly prepared for modeling.
 
-The project consists of two main files: `Car Prediction Project_(old).py` and `Car Prediction Project.py`. The `Car Prediction Project_(old).py` file contains the initial code for loading the data, while the `Car Prediction Project.py` file contains the updated code for loading the data and building the machine learning model. The project uses a pipeline-based approach to build the model, which includes data preprocessing, feature engineering, and model selection.
-
-The goal of this project is to provide a robust and accurate car price prediction model that can be used by car dealerships, buyers, and sellers to estimate the value of a car. The project has the potential to be extended to include additional features such as image recognition, natural language processing, and more. With the rise of online car marketplaces, this project can provide a valuable tool for users to make informed decisions when buying or selling a car.
+The Car Prediction Project is built using Python and scikit-learn, with a focus on modularity, scalability, and maintainability. The project is designed to be easily extensible, allowing users to add new features, models, and data sources as needed. With its robust architecture and advanced predictive capabilities, the Car Prediction Project is an ideal solution for anyone looking to gain insights into the automotive market.
 
 ✨ Features
 ==========
@@ -70,4 +69,3 @@ To test the project, follow these steps:
 2. **Split the Data**: Split the data into training and testing sets by running `StratifiedShuffleSplit()`.
 3. **Build the Model**: Build the model by running `Pipeline()` and `ColumnTransformer()`.
 4. **Evaluate the Model**: Evaluate the model by running `mean_squared_error()` and `mean_absolute_error()`.
-
