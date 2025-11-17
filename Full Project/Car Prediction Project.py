@@ -47,7 +47,7 @@ if not os.path.exists(MODEL_FILE):
     test_set.to_csv("Dataset/Price_prediction_testset.csv", index=False)
     
     train_set["Price_log"]=np.log1p(train_set["Price"])
-    data_labels=train_set["Price_log"].copy()
+    data_labels=train_set["Price"].copy()
     data=train_set.drop(["Price", "Price_log"], axis=1)
 
     candidate_cat = ["Manufacturer","Model","Category","Leather interior","Fuel type", "Gear box type","Drive wheels","Wheel","Color"]
