@@ -48,8 +48,7 @@ if not os.path.exists(MODEL_FILE):
     
     train_set["Price_log"]=np.log1p(train_set["Price"])
     data_labels=train_set["Price_log"].copy()
-    data=train_set.drop("Price", axis=1)
-    data=train_set.drop("Price_log", axis=1)
+    data=train_set.drop(["Price", "Price_log"], axis=1)
 
     candidate_cat = ["Manufacturer","Model","Category","Leather interior","Fuel type", "Gear box type","Drive wheels","Wheel","Color"]
     cat_attribs = [c for c in candidate_cat if c in data.columns]
@@ -66,6 +65,24 @@ if not os.path.exists(MODEL_FILE):
     joblib.dump(model, MODEL_FILE)
     joblib.dump(pipeline, PIPELINE_FILE)
     print("Model Is trained")
+
+    # Final check: show if Price or Price_log are present in pipeline expected inputs
+    try:
+        expected_cols=[]
+        if hasattr(pipeline,"transformers_"):
+            for name, trans, cols in pipeline.transformers_:
+                if cols is not None:
+                    if isinstance(cols, (list, tuple)):
+                        expected_cols.extend(list(cols))
+                    else:
+                        expected_cols.append(cols)
+        leakage = [c for c in ("Price", "Price_log") if c in expected_cols]
+        if leakage:
+            print("WARNING: Pipeline expects these columns (possible leakage):", leakage)
+        else:
+            print("No Price/Price_log in pipeline feature lists. Good.")
+    except Exception:
+        pass
 else:
     model=joblib.load(MODEL_FILE)
     pipeline=joblib.load(PIPELINE_FILE)
