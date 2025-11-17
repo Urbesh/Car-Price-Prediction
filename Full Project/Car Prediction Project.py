@@ -104,8 +104,7 @@ else:
     except Exception:
         pass
     X_test_prepared=pipeline.transform(X_test)
-    y_log_pred=model.predict(X_test_prepared)
-    predictions=np.expm1(y_log_pred)
+    predictions=model.predict(X_test_prepared)
     test_set["Predicted_Price"]=predictions
     test_set["Actual_Price"]=y_test
     test_set.drop("Price",axis=1,inplace=True)
