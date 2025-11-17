@@ -47,10 +47,13 @@ if not os.path.exists(MODEL_FILE):
     for train_index, test_index in split.split(data, data["Price_cat"]):
         train_set=data.loc[train_index].drop(columns=["Price_cat"]).reset_index(drop=True)
         test_set =data.loc[test_index].drop(columns=["Price_cat"]).reset_index(drop=True)
+    test_set["Price_log"]=np.log1p(test_set['Price'])
     test_set.to_csv("Dataset/Price_prediction_testset.csv", index=False)
     
-    data_labels=train_set["Price"].copy()
+    train_set["Price_log"]=np.log1p(train_set["Price"])
+    data_labels=train_set["Price_log"].copy()
     data=train_set.drop("Price", axis=1)
+    data=train_set.drop("Price_log", axis=1)
 
     candidate_cat = ["Manufacturer","Model","Category","Leather interior","Fuel type", "Gear box type","Drive wheels","Wheel","Color"]
     cat_attribs = [c for c in candidate_cat if c in data.columns]
@@ -72,6 +75,7 @@ else:
     pipeline=joblib.load(PIPELINE_FILE)
     test_set=pd.read_csv("Dataset/Price_prediction_testset.csv")
     X_test=test_set.drop("Price", axis=1)
+    X_test=test_set.drop("Price_log", axis=1)
     y_test=test_set["Price"]
     try:
         # ColumnTransformer stores the original column lists in transformers_ tuples
@@ -88,10 +92,12 @@ else:
     except Exception:
         pass
     X_test_prepared=pipeline.transform(X_test)
-    predictions=model.predict(X_test_prepared)
+    y_log_pred=model.predict(X_test_prepared)
+    predictions=np.expm1(y_log_pred)
     test_set["Predicted_Price"]=predictions
     test_set["Actual_Price"]=y_test
     test_set.drop("Unnamed: 0",axis=1,inplace=True)
     test_set.drop("Price",axis=1,inplace=True)
+    test_set.drop("Price_log",axis=1,inplace=True)
     test_set.to_csv("Output/Predicted_price.csv", index=False)
     print("Inference complete. Saved to Output/Predicted_price.csv")
