@@ -87,8 +87,7 @@ else:
     model=joblib.load(MODEL_FILE)
     pipeline=joblib.load(PIPELINE_FILE)
     test_set=pd.read_csv("Dataset/Price_prediction_testset.csv")
-    X_test=test_set.drop("Price", axis=1)
-    X_test=test_set.drop("Price_log", axis=1)
+    X_test=test_set.drop(["Price","Price_log"], axis=1)
     y_test=test_set["Price"]
     try:
         # ColumnTransformer stores the original column lists in transformers_ tuples
