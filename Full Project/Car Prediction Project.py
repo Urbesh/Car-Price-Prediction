@@ -92,7 +92,6 @@ else:
     predictions=np.expm1(y_log_pred)
     test_set["Predicted_Price"]=predictions
     test_set["Actual_Price"]=y_test
-    test_set.drop("Unnamed: 0",axis=1,inplace=True)
     test_set.drop("Price",axis=1,inplace=True)
     test_set.drop("Price_log",axis=1,inplace=True)
     test_set.to_csv("Output/Predicted_price.csv", index=False)
