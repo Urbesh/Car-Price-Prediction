@@ -33,17 +33,30 @@ def build_pipeline(num_attribs,cat_attribs):
 if not os.path.exists(MODEL_FILE):
     # Train the model 
     data=pd.read_csv(f"Dataset/New_car_price_prediction.csv")
+    
+    # --- DATA CLEANING START ---
+    # Remove extreme outliers that are confusing the model
+    print(f"Original dataset shape: {data.shape}")
+    data =data[data["Price"] < 200000] # Remove prices > 200k (remember this changes these caused by data entry errors in previous model training)
+    data = data[data["Price"] > 500]    # Remove junk prices < 500 (remember this changes these caused by data entry errors in previous model training)
+    print(f"Cleaned dataset shape: {data.shape}")
+    # --- DATA CLEANING END ---
+
     data["Price_cat"]=pd.cut(
         data["Price"],
-        bins=[1.0, 8123.0, 18503.0, 26307500.0],
+        bins=[0.0, 10000.0, 20000.0, 200000.0],
         labels=[1, 2, 3],
         include_lowest=True
     )
     split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
     for train_index, test_index in split.split(data, data["Price_cat"]):
-        train_set=data.loc[train_index].drop(columns=["Price_cat"]).reset_index(drop=True)
-        test_set =data.loc[test_index].drop(columns=["Price_cat"]).reset_index(drop=True)
+        train_set=data.iloc[train_index].drop(columns=["Price_cat"]).reset_index(drop=True)
+        test_set= data.iloc[test_index].drop(columns=["Price_cat"]).reset_index(drop=True)
     test_set["Price_log"]=np.log1p(test_set['Price'])
+    
+    # Ensure directory exists for output
+    if not os.path.exists("Dataset"):
+        os.makedirs("Dataset")
     test_set.to_csv("Dataset/Price_prediction_testset.csv", index=False)
     
     train_set["Price_log"]=np.log1p(train_set["Price"])
@@ -52,7 +65,7 @@ if not os.path.exists(MODEL_FILE):
 
     candidate_cat = ["Manufacturer","Model","Category","Leather interior","Fuel type", "Gear box type","Drive wheels","Wheel","Color"]
     cat_attribs = [c for c in candidate_cat if c in data.columns]
-    num_attribs = [c for c in data.columns if c not in cat_attribs]
+    num_attribs=[c for c in data.columns if c not in cat_attribs]
 
     pipeline=build_pipeline(num_attribs,cat_attribs)
     data_prepared=pipeline.fit_transform(data)
@@ -65,7 +78,7 @@ if not os.path.exists(MODEL_FILE):
     joblib.dump(model, MODEL_FILE)
     joblib.dump(pipeline, PIPELINE_FILE)
     print("Model Is trained")
-
+    # Remember this part..... This ensures there is no data leakage.
     # Final check: show if Price or Price_log are present in pipeline expected inputs
     try:
         expected_cols=[]
