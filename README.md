@@ -42,8 +42,14 @@ The Car Prediction Project includes the following features:
 
 The project structure is as follows:
 
-* `Car Prediction Project_(old).py`: This file contains the initial code for loading the data.
+* `Car Prediction Project_('pipeline_testing and model accuracy testing.py)`: This file contains the initial code for loading the data.
 * `Car Prediction Project.py`: This file contains the updated code for loading the data and building the machine learning model.
+* `model_evalution.py`: This file contains an AI generated program that evaluates the model and show evaluation results.
 * `dataset/`: This folder contains the dataset used for the project.
 * `models/`: This folder contains the saved models.
 * `output/`: This folder contains output which is generated after the model have predicted a price and saved it as a csv file.
+
+🌐 Web Application (Upcoming)
+=============================
+
+A web-based interface is planned for this project to allow users to input car details and receive real-time price predictions using the trained machine learning model. This will make the project more interactive and closer to a real-world application. Development for the web app will be introduced in upcoming updates.
