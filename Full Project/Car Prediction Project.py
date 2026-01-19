@@ -40,8 +40,7 @@ if not os.path.exists(MODEL_FILE):
     data =data[data["Price"] < 200000] # Remove prices > 200k (remember this changes these caused by data entry errors in previous model training)
     data = data[data["Price"] > 500]    # Remove junk prices < 500 (remember this changes these caused by data entry errors in previous model training)
     print(f"Cleaned dataset shape: {data.shape}")
-    # --- DATA CLEANING END ---
-
+    
     data["Price_cat"]=pd.cut(
         data["Price"],
         bins=[0.0, 10000.0, 20000.0, 200000.0],
@@ -52,16 +51,14 @@ if not os.path.exists(MODEL_FILE):
     for train_index, test_index in split.split(data, data["Price_cat"]):
         train_set=data.iloc[train_index].drop(columns=["Price_cat"]).reset_index(drop=True)
         test_set= data.iloc[test_index].drop(columns=["Price_cat"]).reset_index(drop=True)
-    test_set["Price_log"]=np.log1p(test_set['Price'])
     
     # Ensure directory exists for output
     if not os.path.exists("Dataset"):
         os.makedirs("Dataset")
     test_set.to_csv("Dataset/Price_prediction_testset.csv", index=False)
     
-    train_set["Price_log"]=np.log1p(train_set["Price"])
     data_labels=train_set["Price"].copy()
-    data=train_set.drop(["Price", "Price_log"], axis=1)
+    data=train_set.drop(["Price"], axis=1)
 
     candidate_cat = ["Manufacturer","Model","Category","Leather interior","Fuel type", "Gear box type","Drive wheels","Wheel","Color"]
     cat_attribs = [c for c in candidate_cat if c in data.columns]
@@ -100,7 +97,7 @@ else:
     model=joblib.load(MODEL_FILE)
     pipeline=joblib.load(PIPELINE_FILE)
     test_set=pd.read_csv("Dataset/Price_prediction_testset.csv")
-    X_test=test_set.drop(["Price","Price_log"], axis=1)
+    X_test=test_set.drop(["Price"], axis=1)
     y_test=test_set["Price"]
     try:
         # ColumnTransformer stores the original column lists in transformers_ tuples
